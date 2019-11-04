@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block head %} {% endblock %}
+
+<div class="container">
+
+    {% block body %}
+    <main role="main" class="container1">
+            <div class="starter-template">
+              <h1>Cristine Campigotto Avvocatissima</h1>
+              {% from "includes/_formhelpers.html" import render_field%}
+              <p class="lead">... lorem ipsum ... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum </p>
+              <br>
+              <h2>servizi offerti</h2>
+                <div class="starter-template">
+                  <style>
+                  img {
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    padding: 5px;
+                    filter: grayscale(100%);
+                  }
+                  .container {
+                    position: relative;
+                    width: 30%;
+                  }
+
+                  
+
+                  </style>
+                      <div class="container" style="display: inline-block">
+                        <img src="./static/lawyers.jpg" width="300" height="200" alt="diritto assicurativo">                        
+                        <div class="overlay">
+                          
+                        </div>
+                      </div>
+                      
+                      <div class="container" style="display: inline-block">
+                        <img src="./static/contract.jpg" width="300" height="200" alt="contrattualistica">
+                        <div class="overlay">
+                         
+                        </div>
+                      </div>
+                      
+                      <div class="container" style="display: inline-block"> 
+                        <img src="./static/divorce.jpg" width="300" height="200" alt="diritto di famiglia">
+                        <div class="overlay">
+                         
+                        </div>
+                      </div>
+                      <br>
+                       <div class="container" style="display: inline-block"> 
+                        <img src="./static/compravendita.jpg" width="300" height="200" alt="diritto di famiglia">
+                        <div class="overlay">
+                          
+                        </div>
+                      </div>
+                      <div class="container" style="display: inline-block"> 
+                        <img src="./static/criminal.jpg" width="300" height="200" alt="diritto di famiglia">
+                        <div class="overlay">
+                          
+                        </div>
+                      </div>
+                      <div class="container" style="display: inline-block"> 
+                        <img src="./static/notary.jpg" width="300" height="200" alt="diritto di famiglia">
+                        <div class="overlay">
+                        
+                        </div>
+                      </div>
+                      <p> qua possiamo mettere le descrizioni...</p>
+                </div>
+
+              <h2>dove sono</h2>
+                <div class="starter-template">
+                  <iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=modena%20corso%20canalgrande%2092&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+                  </iframe>
+                </div>
+                <div class="starter-template">
+                  <h2>Contattatemi</h2>
+                  <p>Ufficio: Corso Canalgrande ..........</p>
+                  <p>email: email@domain.com</p>
+                  <p>telefono: 0123456789</p>
+                <br>
+
+                  <form method ="POST", action ="">
+                  <div class="form-group">
+                    {{render_field(form.name, class = "form-control")}}
+                  </div>
+                  <div class="form-group">
+                    {{render_field(form.telefono, class = "form-control")}}
+                  </div>
+                  <div class="form-group">
+                    {{render_field(form.email, class = "form-control")}}
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                  </div>
+                  <div class="form-group">
+                    {{render_field(form.messaggio, class = "form-control")}}
+                  </div>
+                  <button type="submit" class="btn btn-primary">Invia</button>
+                </form>
+                  </div>
+                {% if error %}
+                  <p class="error"><strong> Message: {{ error }}</strong>
+                {% endif %}
+                </div>
+                <style>
+                </style>
+            </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"><\/script>')</script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>        
+        
+    {% endblock %}
+
+</div>
+
