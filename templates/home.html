@@ -2,49 +2,38 @@
 
 {% block head %} {% endblock %}
 
-<div class="container">
-
-    {% block body %}
-    <main role="main" class="container1">
+    <div class="container">
+        {% block body %}
+        <main role="main" class="container1">
             <div class="starter-template">
-              <h1>web app for some data science</h1>
-              {% from "includes/_formhelpers.html" import render_field%}
-              <p class="lead"> ...input below the url you wish to scrape ... </p>
-              <br>
+                <h1>web scraping app</h1>
+                <p>Please enter below the URL to scrape</p>
+                {% from "includes/_formhelpers.html" import render_field%}
+
                 <div class="starter-template">
-                  <style>
-                  img {
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    padding: 5px;
-                    filter: grayscale(100%);
-                  }
-                  .container {
-                    position: relative;
-                    width: 30%;
-                  }
-                  </style>
-                                  
-                  <form method ="POST", action ="">
-                    <div class="form-group">
-                      {{render_field(form.name, class = "form-control")}}
-                    </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Invia</button>
-                  </form>
-                  </div>
-                    {% if error %}
-                      <p class="error"><strong> Message: {{ error }}</strong>
-                    {% endif %}
+
+                    <form method="POST" , action="">
+                        <div class="form-group">
+                            {{render_field(form.url, class = "form-control")}}
+                            <small id="emailHelp" class="form-text text-muted">please enter the website in the form: HTTP://DOMAIN.COM</small>
+                        </div>
+
+                        <div class="form-group">
+                            {{render_field(form.email, class = "form-control")}}
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Scrape</button>
+                    </form>
                 </div>
-                <style>
-                </style>
+                {% if error %}
+                    <p class="error">
+                    <strong> Message: {{ error }}</strong>
+                {% endif %}
             </div>
-    </main>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"><\/script>')</script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>        
-        
+        </main>
+    </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"><\/script>')</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+
     {% endblock %}
-
-</div>
-
