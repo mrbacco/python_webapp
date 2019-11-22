@@ -95,7 +95,7 @@ def index():
         soup = BeautifulSoup(payload, "html.parser")
         values=[]
         for div in soup.find_all("div"): #looping to find all the "a" references
-            value = [a.text for a in soup.find_all("twitter")] #looping to find all the "a" references
+            value = [a.text for a in soup.find_all("a")] #looping to find all the "a" references
             values.append(value)
 
         
