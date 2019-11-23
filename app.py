@@ -23,6 +23,7 @@ from bs4 import BeautifulSoup
 import requests
 import pprint
 
+
 app = Flask(__name__) # creating an instalnce of the Flask class for thsi app as web server
 
 time = datetime.now()
@@ -80,8 +81,8 @@ def index():
         # insert the list into the mongo db
         x = mycol.insert_many(mymsg), print("inserting this item: ", mymsg, "in the database called ", mycol)
         # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!
-        msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
-        mail.send(msg)
+        #msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
+        #mail.send(msg)
         # validating the url in the form http://...
         #url1="http://"+url #making sure the parser will get the HTTP://WWW.EXAMPLE.COM syntax
         
@@ -92,10 +93,10 @@ def index():
         #now I can apply the BS4 class to the content of the page
 
         payload = result.content # defining a new variable that takes the content of the web page
-        soup = BeautifulSoup(payload, "html.parser")
+        soup = BeautifulSoup(payload, "lxml")
         values=[]
         for div in soup.find_all("div"): #looping to find all the "a" references
-            value = [a.text for a in soup.find_all("a")] #looping to find all the "a" references
+            value = [a.text for a in soup.find_all("a")] #looping to find all the links in the page references
             values.append(value)
 
         
