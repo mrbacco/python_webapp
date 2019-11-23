@@ -80,8 +80,8 @@ def index():
         # insert the list into the mongo db
         x = mycol.insert_many(mymsg), print("inserting this item: ", mymsg, "in the database called ", mycol)
         # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!
-        #msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
-        #mail.send(msg)
+        msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
+        mail.send(msg)
         # validating the url in the form http://...
         #url1="http://"+url #making sure the parser will get the HTTP://WWW.EXAMPLE.COM syntax
         
