@@ -23,7 +23,6 @@ from bs4 import BeautifulSoup
 import requests
 import pprint
 
-
 app = Flask(__name__) # creating an instalnce of the Flask class for thsi app as web server
 
 time = datetime.now()
