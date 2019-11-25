@@ -93,13 +93,17 @@ def index():
 
         payload = result.content # defining a new variable that takes the content of the web page
         soup = BeautifulSoup(payload, "lxml")
-        vals=[]
-        for div in soup.find_all("div"): #looping to find all the "a" references
-            val = [a.text for a in soup.find_all("a")] #looping to find all the links in the page references
-            vals.append(val)
-
         
-        pprint.pprint(values) #using .text allows to extract only the text on the webpage and not the tags
+        values=[]
+        for h1 in soup.find_all("div"): #looping to find all the "a" references
+            a_tag = h1.find("a")
+            values.append(a_tag)
+            #value = [a.text for a in soup.find_all("links")] #looping to find all the links in the page references
+            #values.append(value)
+        #tot = values.count("Kristallnacht")
+        #pprint.pprint(values) #using .text allows to extract only the text on the webpage and not the tags
+        print(values,"\n")
+        
          
 
 
