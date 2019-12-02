@@ -98,6 +98,7 @@ def index():
         for var in soup.find_all("div"): #looping to find all the "div" of the page
             a_tag = var.find("a")
             values.append(a_tag)
+
             #value = [a.text for a in soup.find_all("links")] #looping to find all the links in the page references
             #values.append(value)
         #tot = values.count("Kristallnacht")
