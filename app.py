@@ -13,7 +13,8 @@ import pandas as pd
 import scrapy as scrapy
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators # FOR THE WEBFORMS
 #from flask_wtf import URLField
-from passlib.hash import sha512_crypt # passowrd hashing
+from passlib.hash import sha512_crypt # password hashing
+
 import logging
 from functools import wraps
 from emails import send_mail
@@ -52,6 +53,7 @@ try:
     myclient = pymongo.MongoClient("mongodb://mrbacco:mongodb001@cluster0-shard-00-00-goutv.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority")
     mydb = myclient["webscraping"] 
     mycol = mydb["scraping"]
+    mycol_u = mydb["users"]
     print("if connected to db, then these are the collections in mydb: ", mydb.list_collection_names()) # used to check if db is connected
 except:
     logging.warning("not connected to mongodb")
@@ -62,19 +64,30 @@ except:
 
 ############## defining the routes for the different web pages START ##############
 
-class Init(Form): # definition of a class for the init form
-    url = StringField('URL', [validators.URL()])
-    email = StringField('Email', [validators.Email()])
+# definition of a class for the form used in signup, login, and web scraping
+class Init(Form): #this is for registering
+    email = StringField('Email', [validators.DataRequired(),validators.Email()])
+    name = StringField('Name', [validators.DataRequired(),validators.length(min=1, max=50)])
+    username = StringField('Username', [validators.DataRequired(),validators.DataRequired(),validators.length(min=5, max=15)])
+    password = PasswordField("Password", [validators.DataRequired(), validators.length(min=6, max=14)])
 
+class Scrape(Form): #this is for scraping
+    url = StringField('URL', [validators.DataRequired(),validators.URL()])
+
+class Signin(Form): #this is for signing in
+    email = StringField('Email', [validators.DataRequired(),validators.Email()])
+    password = PasswordField("Password", [validators.DataRequired()])
+    
+# route for the web scraping home page 
 @app.route("/", methods = ['GET', 'POST']) # this is the route to the homepage for scraping
 def index():
-    form = Init(request.form)
+    form = Scrape(request.form)
     if request.method == 'GET': # make sure the method used is define above
         return render_template('home.html', form = form), logging.warning("you are under the home page now using GET, well done mrbacco ")
     if request.method == 'POST' and form.validate():
         # the following are the data from the init form
         url = form.url.data
-        email = form.email.data
+        #email = form.email.data
         
         result = requests.get(url) # getting the url from the webform
         print("the requested url is: ", url) # printing the url to make sure the variable contains it
@@ -112,7 +125,7 @@ def index():
         mymsg=[{
                 "url": url,
                 "response code": result.status_code,
-                "email" : email,
+                #"email" : email,
                 "date": readtime,
               }]
 
@@ -134,6 +147,87 @@ def index():
 def dashboard():
     print("you are under the dashboard page now, well done mrbacco ")
     return render_template('dashboard.html')
+
+
+#route for the signup page
+@app.route("/signup", methods = ['GET', "POST"]) 
+def signup():
+    form = Init(request.form)
+    if request.method == 'GET': # make sure the method used is define above
+        return render_template('signup.html', form = form), logging.warning("you are under the signup page now using GET, well done mrbacco ")
+   
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        username = form.username.data
+        email= form.email.data
+        password = sha512_crypt.encrypt(str(form.password.data))
+
+        myuser=[{
+                "name": name,
+                "username": username,
+                "email": email,
+                "passw" : password, #this is the hashed password
+                "date": readtime,
+              }]
+
+        u = mycol_u.insert_many(myuser), print("inserting this item: ", myuser) # insert user into the mongo db
+        
+        flash("thanks for registering, you can now login", "success")
+        return redirect(url_for('signin')), print ("redirecting to signin page")
+
+    flash("Credential not correct, try again", "danger")  
+    return render_template('signup.html', form = form), print("reload the signup page due to failure")
+
+
+
+
+
+#route for the signin  page
+@app.route("/signin", methods = ['GET', "POST"]) 
+def signin():
+    form = Signin(request.form)
+    if request.method == 'GET': # make sure the method used is define above
+        return render_template('signin.html', form = form), print("you are under the signin page now, well done mrbacco")
+    if request.method == 'POST' and form.validate():
+        # the following are the data from the init form
+        email = form.email.data
+        password = form.password.data
+
+        email_db = mycol_u.find_one({"email":email}, {"password":password})
+        
+        if email_db is None:
+            flash("No USER FOUND!!, please try again", "danger")
+            return render_template('signin.html', form = form), print("user not found, flashed a message on the web page")
+        else:
+            password_db = password
+
+        if sha512_crypt.verify(password, password_db):
+            flash("You are now logged in", "success")
+            return redirect(url_for("home.html",form = form))
+        else:
+            flash("credential not correct, please try again", "danger")
+
+        
+        print("redirecting to scraping page")
+    return render_template('signin.html', form = form)
+
+
+
+
+
+
+
+
+
+
+#route for the signout page
+@app.route("/signout", methods = ['GET', "POST"]) 
+def signout():
+    print("you are under the signout page now, well done mrbacco ")
+    return render_template('signout.html')
+
+
+
 
 
 
