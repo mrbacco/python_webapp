@@ -166,7 +166,7 @@ def signup():
                 "name": name,
                 "username": username,
                 "email": email,
-                "passw" : password, #this is the hashed password
+                "password" : password, #this is the hashed password
                 "date": readtime,
               }]
 
@@ -180,8 +180,6 @@ def signup():
 
 
 
-
-
 #route for the signin  page
 @app.route("/signin", methods = ['GET', "POST"]) 
 def signin():
@@ -191,17 +189,18 @@ def signin():
     if request.method == 'POST' and form.validate():
         # the following are the data from the init form
         email = form.email.data
-        password = form.password.data
+        password_form = form.password.data
+        print("these are the email and password inserted", email, password_form)
 
-        email_db = mycol_u.find_one({"email":email}, {"password":password})
+        user_db = mycol_u.find_one({"email":email}, {"password":password})
+        print("this is the user found", user_db)
         
-        if email_db is None:
+        
+        if user_db is None:
             flash("No USER FOUND!!, please try again", "danger")
             return render_template('signin.html', form = form), print("user not found, flashed a message on the web page")
-        else:
-            password_db = password
-
-        if sha512_crypt.verify(password, password_db):
+        
+        if sha512_crypt.verify(password_candidate, password_form):
             flash("You are now logged in", "success")
             return redirect(url_for("home.html",form = form))
         else:
