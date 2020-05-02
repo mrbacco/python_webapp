@@ -192,21 +192,20 @@ def signin():
         password_form = form.password.data
         print("these are the email and password inserted", email, password_form)
 
-        user_db = mycol_u.find_one({"email":email}, {"password":password})
-        print("this is the user found", user_db)
-        
+        user_db = mycol_u.find_one({'email' : email})
+        for key, value in user_db.items():
+            print ("these are the fields in the db ", key, value)
         
         if user_db is None:
             flash("No USER FOUND!!, please try again", "danger")
             return render_template('signin.html', form = form), print("user not found, flashed a message on the web page")
-        
-        if sha512_crypt.verify(password_candidate, password_form):
+
+        if sha512_crypt.verify(user_db["password"], password_form):
             flash("You are now logged in", "success")
             return redirect(url_for("home.html",form = form))
         else:
             flash("credential not correct, please try again", "danger")
 
-        
         print("redirecting to scraping page")
     return render_template('signin.html', form = form)
 
