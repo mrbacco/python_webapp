@@ -129,7 +129,8 @@ def index():
         
     return render_template('home.html', form = form), print("you are under the home page now, mrbacco ...")
 
-@app.route("/dashboard", methods = ['GET']) # this is the route to the dasboard page for scraping results
+#route for the web scraping results page
+@app.route("/dashboard", methods = ['GET']) 
 def dashboard():
     print("you are under the dashboard page now, well done mrbacco ")
     return render_template('dashboard.html')
@@ -137,17 +138,29 @@ def dashboard():
 
 
 
-
+#route for the users page - MAKE IT VISIBLE ONLY TO ADMIN
 @app.route("/users", methods = ['GET'])
 def users():
     print("you are under the users page now, well done mrbacco")
     return render_template('users.html')
   
 
-
-    
 ############## defining the routes for the different web pages END ##############
 
+
+
+############# signup to the webapp START ##############
+
+
+############# signup to the webapp END ##############
+
+
+
+
+############# signin to the webapp START ##############
+
+
+############# signin to the webapp END ##############
 
 
 
