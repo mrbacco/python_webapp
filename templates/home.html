@@ -7,15 +7,14 @@
         <main role="main" class="container1">
             <div class="starter-template">
                 <h1>web scraping app</h1>
-                <p>Please enter below the URL to scrape</p>
+                <p>Please login or signup to user the app features</p>
+                {% if session.logged_in %}
                 {% from "includes/_formhelpers.html" import render_field%}
-
                 <div class="starter-template">
-
                     <form method="POST" , action="">
                         <div class="form-group">
                             {{render_field(form.url, class = "form-control")}}
-                            <small id="emailHelp" class="form-text text-muted">please enter the website in the form: HTTP://DOMAIN.COM</small>
+                            <small id="emailHelp" class="form-text text-muted">please enter the website you would like to scrape in the form: HTTP://DOMAIN.COM</small>
                         </div>
 
                         <div class="form-group">
@@ -28,6 +27,7 @@
                 {% if error %}
                     <p class="error">
                     <strong> Message: {{ error }}</strong>
+                {% endif %}
                 {% endif %}
             </div>
         </main>

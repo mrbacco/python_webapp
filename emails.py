@@ -1,8 +1,8 @@
 ########################################################
-# Project: basic web application for lawyers           #
-# Author: bac [and_bac]                                #
-# email: mrbacco@outlook.com                           #
-# Date: Oct 2019                                       #
+# Project: basic web application for scraping          #
+# Author: mrbacco                                      #
+# email: mrbacco@mrbacco.com                           #
+# Date: Q4/2019 - Q1/2020                              #
 # SendEmail file in python using flask email           #
 ########################################################
 
