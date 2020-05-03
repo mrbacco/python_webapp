@@ -8,13 +8,13 @@
 
 from flask import Flask, render_template, url_for, session, request, redirect, logging, flash  # modules from flask for web server
 from data import Items
+
 import pymongo # driver for mongdb connectivity
 import pandas as pd
 import scrapy as scrapy
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators # FOR THE WEBFORMS
 #from flask_wtf import URLField
 from passlib.hash import sha512_crypt # password hashing
-
 import logging
 from functools import wraps
 from emails import send_mail
@@ -25,6 +25,16 @@ import requests
 import pprint
 
 app = Flask(__name__) # creating an instalnce of the Flask class for thsi app as web server
+
+#set a session when logged in
+@app.route('/login_success')
+def login_success():
+    session['key_name'] = 'key_value' #stores a secure cookie in browser
+    return redirect(url_for('index'))
+
+#read the session
+
+
 
 # creation of a date&time object to be used in the databse
 time = datetime.now() 
@@ -75,7 +85,7 @@ class Scrape(Form): #this is for scraping
     url = StringField('URL', [validators.DataRequired(),validators.URL()])
 
 class Signin(Form): #this is for signing in
-    email = StringField('Email', [validators.DataRequired(),validators.Email()])
+    username = StringField('Username', [validators.DataRequired(),validators.DataRequired(),validators.length(min=5, max=15)])
     password = PasswordField("Password", [validators.DataRequired()])
     
 # route for the web scraping home page 
@@ -139,7 +149,6 @@ def index():
         url1="http://"+url #making sure the parser will get the HTTP://WWW.EXAMPLE.COM syntax
         """
 
-        
     return render_template('home.html', form = form), print("you are under the home page now, mrbacco ...")
 
 #route for the web scraping results page
@@ -188,25 +197,28 @@ def signin():
         return render_template('signin.html', form = form), print("you are under the signin page now, well done mrbacco")
     if request.method == 'POST' and form.validate():
         # the following are the data from the init form
-        email = form.email.data
+        username = form.username.data
         password_form = form.password.data
-        print("these are the email and password inserted", email, password_form)
+        print("these are the email and password inserted", username, password_form)
 
-        user_db = mycol_u.find_one({'email' : email})
-        for key, value in user_db.items():
-            print ("these are the fields in the db ", key, value)
+        user_db = mycol_u.find_one({'username' : username})
+        #for key, value in user_db.items():
+            #print ("these are the fields in the db ", key, value)
 
         if user_db is None:
             flash("No USER FOUND!!, please try again", "danger")
             return render_template('signin.html', form = form), print("user not found, flashed a message on the web page")
 
-        if sha512_crypt.verify(user_db['password'], password_form):
+        if sha512_crypt.verify(password_form, user_db['password']):
+            
+            session ["logged_in"] = True
+            session ["username"] = username
+
             flash("You are now logged in", "success")
-            return redirect(url_for("home.html",form = form))
+            #return render_template('home.html', form = form), print("Password match: redirecting to scraping page")
         else:
             flash("credential not correct, please try again", "danger")
-
-        print("redirecting to scraping page")
+        
     return render_template('signin.html', form = form)
 
 
@@ -221,8 +233,10 @@ def signin():
 #route for the signout page
 @app.route("/signout", methods = ['GET', "POST"]) 
 def signout():
+    session.clear()
+    flash("You are now logged out, thanks", "success")
     print("you are under the signout page now, well done mrbacco ")
-    return render_template('signout.html')
+    return render_template('home.html')
 
 
 

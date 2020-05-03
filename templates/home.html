@@ -9,7 +9,7 @@
                 <h1>web scraping app</h1>
                 <p>Please login to use the app features</p>
                 {% if session.logged_in %}
-                <p>Welcome {{ session.username }}</p>
+                <p>Welcome {{ session.email }}</p>
 
                 {% from "includes/_formhelpers.html" import render_field%}
                 <div class="starter-template">
@@ -19,10 +19,7 @@
                             <small id="emailHelp" class="form-text text-muted">please enter the website you would like to scrape in the form: HTTP://DOMAIN.COM</small>
                         </div>
 
-                        <div class="form-group">
-                            {{render_field(form.email, class = "form-control")}}
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                        </div>
+                        
                         <button type="submit" class="btn btn-primary">Scrape</button>
                     </form>
                 </div>
