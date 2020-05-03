@@ -87,7 +87,7 @@ class Scrape(Form): #this is for scraping
 class Signin(Form): #this is for signing in
     username = StringField('Username', [validators.DataRequired(),validators.DataRequired(),validators.length(min=5, max=15)])
     password = PasswordField("Password", [validators.DataRequired()])
-    
+
 # route for the web scraping home page 
 @app.route("/", methods = ['GET', 'POST']) # this is the route to the homepage for scraping
 def index():
@@ -151,8 +151,24 @@ def index():
 
     return render_template('home.html', form = form), print("you are under the home page now, mrbacco ...")
 
+
+
+#check if user is logged in 
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            flash ("please login first to view this page", "danger")
+            return redirect(url_for("signin"))
+    return wrap
+
+
+
 #route for the web scraping results page
-@app.route("/dashboard", methods = ['GET']) 
+@app.route("/dashboard", methods = ['GET'])
+@is_logged_in
 def dashboard():
     print("you are under the dashboard page now, well done mrbacco ")
     return render_template('dashboard.html')
@@ -228,10 +244,9 @@ def signin():
 
 
 
-
-
 #route for the signout page
-@app.route("/signout", methods = ['GET', "POST"]) 
+@app.route("/signout", methods = ['GET', "POST"])
+@is_logged_in
 def signout():
     session.clear()
     flash("You are now logged out, thanks", "success")
@@ -246,6 +261,7 @@ def signout():
 
 #route for the users page - MAKE IT VISIBLE ONLY TO ADMIN
 @app.route("/users", methods = ['GET'])
+@is_logged_in
 def users():
     print("you are under the users page now, well done mrbacco")
     return render_template('users.html')
