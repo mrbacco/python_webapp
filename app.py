@@ -26,15 +26,6 @@ import pprint
 
 app = Flask(__name__) # creating an instalnce of the Flask class for thsi app as web server
 
-#set a session when logged in
-@app.route('/login_success')
-def login_success():
-    session['key_name'] = 'key_value' #stores a secure cookie in browser
-    return redirect(url_for('index'))
-
-#read the session
-
-
 
 # creation of a date&time object to be used in the databse
 time = datetime.now() 
@@ -46,8 +37,8 @@ app.config.update(dict(
     MAIL_PORT = 465,
     MAIL_USE_TLS = False,
     MAIL_USE_SSL = True,
-    MAIL_USERNAME = 'mistalj85@xxxxxxxxx',
-    MAIL_PASSWORD = 'xxxxxxxxx'
+    MAIL_USERNAME = 'mistalj85@gmail.com',
+    MAIL_PASSWORD = 'mrbacco2013'
 ))
 
 mail = Mail(app)
@@ -151,8 +142,6 @@ def index():
 
     return render_template('home.html', form = form), print("you are under the home page now, mrbacco ...")
 
-
-
 #check if user is logged in 
 def is_logged_in(f):
     @wraps(f)
@@ -164,15 +153,12 @@ def is_logged_in(f):
             return redirect(url_for("signin"))
     return wrap
 
-
-
 #route for the web scraping results page
 @app.route("/dashboard", methods = ['GET'])
 @is_logged_in
 def dashboard():
     print("you are under the dashboard page now, well done mrbacco ")
     return render_template('dashboard.html')
-
 
 #route for the signup page
 @app.route("/signup", methods = ['GET', "POST"]) 
@@ -186,7 +172,7 @@ def signup():
         username = form.username.data
         email= form.email.data
         password = sha512_crypt.encrypt(str(form.password.data))
-
+    
         myuser=[{
                 "name": name,
                 "username": username,
@@ -195,15 +181,24 @@ def signup():
                 "date": readtime,
               }]
 
-        u = mycol_u.insert_many(myuser), print("inserting this item: ", myuser) # insert user into the mongo db
+
+        #checking if the username is already in use
+        u = mycol_u.find_one({'username' : username})
+        if u is not None:
+            flash("USERNAME ALREADY IN USE!!, please choose another username!", "danger")
+            return render_template('signup.html', form = form), print("reload the signup page due username already present")
+        else:
+            u = mycol_u.insert_many(myuser), print("inserting this item: ", myuser) # insert user into the mongo db
         
-        flash("thanks for registering, you can now login", "success")
-        return redirect(url_for('signin')), print ("redirecting to signin page")
+            # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!       
+            msg = Message("NEW MESSAGE: ", sender='mistalj85@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new signup from: </h3> <ul> <li>name: {name}</li> <li>username: {username}</li> <li> email: {email}</li> <li> date and time: {readtime}</li>")
+            mail.send(msg)
+        
+            flash("thanks for registering, you can now login", "success")
+            return redirect(url_for('signin')), print ("redirecting to signin page")
 
-    flash("Credential not correct, try again", "danger")  
-    return render_template('signup.html', form = form), print("reload the signup page due to failure")
-
-
+        flash("Credential not correct, try again", "danger")  
+        return render_template('signup.html', form = form), print("reload the signup page due to failure")
 
 #route for the signin  page
 @app.route("/signin", methods = ['GET', "POST"]) 
@@ -222,27 +217,21 @@ def signin():
             #print ("these are the fields in the db ", key, value)
 
         if user_db is None:
-            flash("No USER FOUND!!, please try again", "danger")
+            flash("No USER FOUND!!, please try again or signup!", "danger")
             return render_template('signin.html', form = form), print("user not found, flashed a message on the web page")
 
         if sha512_crypt.verify(password_form, user_db['password']):
             
-            session ["logged_in"] = True
+            #setting the session on for this user till he/she signs out!!
+            session ["logged_in"] = True 
             session ["username"] = username
 
             flash("You are now logged in", "success")
-            #return render_template('home.html', form = form), print("Password match: redirecting to scraping page")
+            return render_template('home.html', form = form), print("Password match: redirecting to scraping page")
         else:
             flash("credential not correct, please try again", "danger")
         
     return render_template('signin.html', form = form)
-
-
-
-
-
-
-
 
 #route for the signout page
 @app.route("/signout", methods = ['GET', "POST"])
@@ -250,20 +239,14 @@ def signin():
 def signout():
     session.clear()
     flash("You are now logged out, thanks", "success")
-    print("you are under the signout page now, well done mrbacco ")
+    print("user signed out signout")
     return render_template('home.html')
-
-
-
-
-
-
 
 #route for the users page - MAKE IT VISIBLE ONLY TO ADMIN
 @app.route("/users", methods = ['GET'])
 @is_logged_in
 def users():
-    print("you are under the users page now, well done mrbacco")
+    print("you are under the users page now")
     return render_template('users.html')
   
 
