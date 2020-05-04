@@ -37,8 +37,8 @@ app.config.update(dict(
     MAIL_PORT = 465,
     MAIL_USE_TLS = False,
     MAIL_USE_SSL = True,
-    MAIL_USERNAME = 'mistalj85@gmail.com',
-    MAIL_PASSWORD = 'mrbacco2013'
+    MAIL_USERNAME = 'misxxxxxxxxxxxx',
+    MAIL_PASSWORD = 'xxxxxxxxxx'
 ))
 
 mail = Mail(app)
@@ -154,11 +154,11 @@ def is_logged_in(f):
     return wrap
 
 #route for the web scraping results page
-@app.route("/dashboard", methods = ['GET'])
+@app.route("/results", methods = ['GET'])
 @is_logged_in
-def dashboard():
-    print("you are under the dashboard page now, well done mrbacco ")
-    return render_template('dashboard.html')
+def results():
+    print("you are under the results page now, well done mrbacco ")
+    return render_template('results.html')
 
 #route for the signup page
 @app.route("/signup", methods = ['GET', "POST"]) 
