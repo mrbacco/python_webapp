@@ -228,8 +228,8 @@ def signin():
             session ["logged_in"] = True 
             session ["username"] = username
 
-            flash("You are now logged in, please return to the HOME page to start web scraping","success")
-            return render_template('signin.html', form = form), print("Password match: flashing a message")
+            flash("You are now logged in, start web scraping below","success")
+            return redirect(url_for("dashboard")) , print("Password match: flashing a message")
         else:
             flash("credential not correct, please try again", "danger")
         
