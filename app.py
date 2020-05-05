@@ -262,7 +262,7 @@ def dashboard():
     if request.method == 'POST' and form.validate():
         # the following are the data from the init form
         url = form.url.data
-        #email = form.email.data
+        u_name = session['username']
         
         result = requests.get(url) # getting the url from the webform
         print("the requested url is: ", url) # printing the url to make sure the variable contains it
@@ -300,7 +300,7 @@ def dashboard():
         mymsg=[{
                 "url": url,
                 "response code": result.status_code,
-                #"email" : email,
+                "username" : u_name,
                 "date": readtime,
               }]
 
