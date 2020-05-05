@@ -47,23 +47,24 @@
             <a class="nav-link" href="/signup">signup</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/signin"><strong> signin </strong></a>
+            <a class="nav-link" href="/signin">signin</a>
           </li>
           {% if session.logged_in %}
           <li class="nav-item">
-            <a class="nav-link" href="/signout"><strong> signout {{session.username}} </strong></a>
+            <a class="nav-link" href="/signout"> signout <strong> {{session.username}} </strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/users">users</a>
           </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">dashboard</a>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="/results">results</a>
           </li>
           
-          
-          <li class="nav-item">
-            <a class="nav-link" href="/">dashboard</a>
-          </li>
           {% endif %}
           
         </ul>

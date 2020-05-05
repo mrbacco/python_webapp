@@ -37,7 +37,7 @@ app.config.update(dict(
     MAIL_PORT = 465,
     MAIL_USE_TLS = False,
     MAIL_USE_SSL = True,
-    MAIL_USERNAME = 'misxxxxxxxxxxxx',
+    MAIL_USERNAME = 'misxxxxxxxxxxxx', #remember to allow external app access for this account
     MAIL_PASSWORD = 'xxxxxxxxxx'
 ))
 
@@ -82,6 +82,8 @@ class Signin(Form): #this is for signing in
 # route for the web scraping home page 
 @app.route("/", methods = ['GET', 'POST']) # this is the route to the homepage for scraping
 def index():
+    #the commented code below is now under the dashboard route
+    """ 
     form = Scrape(request.form)
     if request.method == 'GET': # make sure the method used is define above
         return render_template('home.html', form = form), logging.warning("you are under the home page now using GET, well done mrbacco ")
@@ -132,7 +134,7 @@ def index():
 
         x = mycol.insert_many(mymsg), print("inserting this item: ", mymsg) # insert the list into the mongo db
 
-        """
+        
         # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!       
         msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
         mail.send(msg)
@@ -140,9 +142,9 @@ def index():
         url1="http://"+url #making sure the parser will get the HTTP://WWW.EXAMPLE.COM syntax
         """
 
-    return render_template('home.html', form = form), print("you are under the home page now, mrbacco ...")
+    return render_template('home.html'), print("you are under the home page now, mrbacco")
 
-#check if user is logged in 
+#check if user is logged in to protect some pages
 def is_logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -157,7 +159,7 @@ def is_logged_in(f):
 @app.route("/results", methods = ['GET'])
 @is_logged_in
 def results():
-    print("you are under the results page now, well done mrbacco ")
+    print("you are under the results page now")
     return render_template('results.html')
 
 #route for the signup page
@@ -226,8 +228,8 @@ def signin():
             session ["logged_in"] = True 
             session ["username"] = username
 
-            flash("You are now logged in", "success")
-            return render_template('home.html', form = form), print("Password match: redirecting to scraping page")
+            flash("You are now logged in, please return to the HOME page to start web scraping","success")
+            return render_template('signin.html', form = form), print("Password match: flashing a message")
         else:
             flash("credential not correct, please try again", "danger")
         
@@ -248,6 +250,72 @@ def signout():
 def users():
     print("you are under the users page now")
     return render_template('users.html')
+
+
+#route for the dashboard page 
+@app.route("/dashboard", methods = ['GET', 'POST'])
+@is_logged_in
+def dashboard():
+    form = Scrape(request.form)
+    if request.method == 'GET': # make sure the method used is define above
+        return render_template('dashboard.html', form = form), logging.warning("you are under the home page now using GET, well done mrbacco ")
+    if request.method == 'POST' and form.validate():
+        # the following are the data from the init form
+        url = form.url.data
+        #email = form.email.data
+        
+        result = requests.get(url) # getting the url from the webform
+        print("the requested url is: ", url) # printing the url to make sure the variable contains it
+        print("the response code is: ", result.status_code)            
+        print(result.headers)
+        
+        # now I can apply the BS4 class to the content of the page
+        payload = result.content # defining a new variable that takes the content of the web page
+        soup = BeautifulSoup(payload, "lxml") # created "soup": the beautiful soup object to use for scraping
+        
+        links=[] # I'm creating an empty list that will be filled with the result of the findings
+
+        # this is the actual block of code for the core web scraping
+        '''
+        for var in soup.find_all("div"): # looping to find all the "div" of the page
+            a_tag = var.find_all("a")
+            links.append(a_tag)
+        '''
+        for www in soup.find_all('a'): # looking for all the hyperlinks in the page and printing them
+            print("the following are the hypelinks available: ", www.get('href'))
+
+        for para in soup.find_all('p'): # looping to find all the "paragraphs" of the page and printing the results
+            print("the paragraphs are: ", str(para.text))
+            # print(links,"\n")
+            # value = [a.text for a in soup.find_all("links")] #looping to find all the links in the page references
+            # values.append(value)
+        # tot = values.count("...")
+        # pprint.pprint(values) #using .text allows to extract only the text on the webpage and not the tags
+        
+        print("the requested title name is  :", soup.title.name)
+        print("the requested title is  :", soup.title)
+        print("the requested title parent name is  :", soup.title.parent.name)
+
+        # defining a new variable taking as input the values from the init form to populate the DB
+        mymsg=[{
+                "url": url,
+                "response code": result.status_code,
+                #"email" : email,
+                "date": readtime,
+              }]
+
+        x = mycol.insert_many(mymsg), print("inserting this item: ", mymsg) # insert the list into the mongo db
+
+        """
+        # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!       
+        msg = Message("NEW MESSAGE: ", sender='campigotto111@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new message from: </h3> <ul><li>URL: {url}</li> <li> EMAIL: {email}</li> <li> DATA e ORA: {readtime}</li>")
+        mail.send(msg)
+        validating the url in the form http://...
+        url1="http://"+url #making sure the parser will get the HTTP://WWW.EXAMPLE.COM syntax
+        """
+
+    print("you are under the dashboard page now")
+    return render_template('dashboard.html', form = form)
   
 
 ############## defining the routes for the different web pages END ##############
