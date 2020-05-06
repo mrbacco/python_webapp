@@ -225,7 +225,7 @@ def signin():
         if sha512_crypt.verify(password_form, user_db['password']):
             
             #setting the session on for this user till he/she signs out!!
-            session ["logged_in"] = True 
+            session ["logged_in"] = True
             session ["username"] = username
 
             flash("You are now logged in, start web scraping below","success")
@@ -321,19 +321,6 @@ def dashboard():
 ############## defining the routes for the different web pages END ##############
 
 
-
-############# signup to the webapp START ##############
-
-
-############# signup to the webapp END ##############
-
-
-
-
-############# signin to the webapp START ##############
-
-
-############# signin to the webapp END ##############
 
 
 

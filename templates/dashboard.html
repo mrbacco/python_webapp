@@ -7,10 +7,12 @@
         <main role="main" class="container1">
             <div class="starter-template">
                 <h1>web scraping app</h1>
-                <p>Please use the link below to perform web scraping</p>
                 {% if session.logged_in %}
                 <p>Welcome <bold>{{ session.username }}</bold></p>
-
+                {% endif %}
+                <p>Please use the link below to perform web scraping</p>
+                {% if session.logged_in %}
+                
                 {% from "includes/_formhelpers.html" import render_field%}
                 <div class="starter-template">
       
