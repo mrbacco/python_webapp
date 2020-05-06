@@ -321,11 +321,6 @@ def dashboard():
 ############## defining the routes for the different web pages END ##############
 
 
-
-
-
-
-
 ####################################################################################################
 # running the app and enabling debug mode so that I can update the app.py without the need of manual restart
 if __name__ == "__main__":

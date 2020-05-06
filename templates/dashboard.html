@@ -15,16 +15,15 @@
                 
                 {% from "includes/_formhelpers.html" import render_field%}
                 <div class="starter-template">
-      
+
                         <form method ="POST", action ="">
                           <div class="form-group">
                             {{render_field(form.url, class = "form-control")}}
-                            <small id="emailHelp" class="form-text text-muted">Please use this format: HTTP://DOMAIN.COM</small>
+                            <small id="emailHelp" class="form-text text-muted">Please use the format: HTTP://domain.com</small>
                           </div>
                           
                           <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
-                    
                     
                 </div>
                     {% if error %}
