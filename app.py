@@ -8,7 +8,7 @@
 
 from flask import Flask, render_template, url_for, session, request, redirect, logging, flash  # modules from flask for web server
 from data import Items
-
+import sqlite3
 import pymongo # driver for mongdb connectivity
 import pandas as pd
 import scrapy as scrapy
@@ -58,6 +58,34 @@ try:
     print("if connected to db, then these are the collections in mydb: ", mydb.list_collection_names()) # used to check if db is connected
 except:
     logging.warning("not connected to mongodb")
+
+
+
+# using SQLite3 for heroku deployment
+
+conn = sqlite3.connect("webscraping.db")
+cur = conn.cursor()
+'''
+cur.execute(""" CREATE TABLE scraping1 (
+    url text,
+    response_code test,
+    username text
+)""")
+
+cur.execute(""" CREATE TABLE users (
+    name text,
+    username test,
+    email text,
+    password text
+)""")
+'''
+cur.execute("SELECT * FROM scraping1")# to check if we are connected to the db
+print("this is the data inside the table scraping1: ",cur.fetchone())
+
+conn.commit()
+conn.close()
+
+
 
 ############## db SETUP END ##############
 
@@ -185,12 +213,16 @@ def signup():
 
 
         #checking if the username is already in use
-        u = mycol_u.find_one({'username' : username})
+
+        #u = mycol_u.find_one({'username' : username})
+        u = cur.execute("SELECT * FROM users WHERE username='username'")
+        conn.commit()
+        
         if u is not None:
             flash("USERNAME ALREADY IN USE!!, please choose another username!", "danger")
             return render_template('signup.html', form = form), print("reload the signup page due username already present")
         else:
-            u = mycol_u.insert_many(myuser), print("inserting this item: ", myuser) # insert user into the mongo db
+            cur.execute("INSERT INTO users VALUES ('name', 'username', 'email', 'password')"), print("inserting this item: ", myuser) # insert user into the mongo db
         
             # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!       
             msg = Message("NEW MESSAGE: ", sender='mistalj85@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new signup from: </h3> <ul> <li>name: {name}</li> <li>username: {username}</li> <li> email: {email}</li> <li> date and time: {readtime}</li>")
