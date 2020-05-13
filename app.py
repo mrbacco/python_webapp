@@ -37,7 +37,7 @@ app.config.update(dict(
     MAIL_PORT = 465,
     MAIL_USE_TLS = False,
     MAIL_USE_SSL = True,
-    MAIL_USERNAME = 'misxxxxxxxxxxxx', #remember to allow external app access for this account
+    MAIL_USERNAME = 'mistal', #remember to allow external app access for this account
     MAIL_PASSWORD = 'xxxxxxxxxx'
 ))
 
@@ -193,8 +193,8 @@ def signup():
             u = mycol_u.insert_many(myuser), print("inserting this item: ", myuser) # insert user into the mongo db
         
             # send an email to mrbacco@mrbacco.com for testing purposes: PLEASE DISABLE THIS IN PRODUCTION!!!!!       
-            msg = Message("NEW MESSAGE: ", sender='mistalj85@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new signup from: </h3> <ul> <li>name: {name}</li> <li>username: {username}</li> <li> email: {email}</li> <li> date and time: {readtime}</li>")
-            mail.send(msg)
+            # msg = Message("NEW MESSAGE: ", sender='mistalj85@gmail.com', recipients=["mrbacco@mrbacco.com"], html = f"<h3> new signup from: </h3> <ul> <li>name: {name}</li> <li>username: {username}</li> <li> email: {email}</li> <li> date and time: {readtime}</li>")
+            # mail.send(msg)
         
             flash("thanks for registering, you can now login", "success")
             return redirect(url_for('signin')), print ("redirecting to signin page")
