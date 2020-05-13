@@ -227,6 +227,7 @@ def signin():
             #setting the session on for this user till he/she signs out!!
             session ["logged_in"] = True
             session ["username"] = username
+            session.secret_key = "supercalifragilistichespiralidoso74"
 
             flash("You are now logged in, start web scraping below","success")
             return redirect(url_for("dashboard")) , print("Password match: flashing a message")
@@ -324,5 +325,5 @@ def dashboard():
 ####################################################################################################
 # running the app and enabling debug mode so that I can update the app.py without the need of manual restart
 if __name__ == "__main__":
-    app.secret_key="mrbacco1974"
+    app.secret_key="supercalifragilistichespiralidoso74"
     app.run(debug=True)
