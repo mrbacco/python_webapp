@@ -19,7 +19,7 @@ def Items():
             'name': 'number 3',
             'created': '10/5/19',
             'type': 'almost',
-            'author': 'and'
+            'author': 'andy'
         }
     ]
     return items
